@@ -1,0 +1,54 @@
+spring:
+  main:
+    allow-circular-references: true
+  shardingsphere:
+    mode:
+      type: Standalone
+      repository:
+        type: JDBC
+    props:
+      sql-show: true
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.100.100:3306/study-sharding-1
+        username: root
+        password: admin
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.100.100:3306/study-sharding-2
+        username: root
+        password: admin
+    rules:
+      sharding:
+        tables:
+          operate_log:
+            key-generate-strategy:
+              column: id
+              key-generator-name: snowflake
+            actual-data-nodes: ds${[0,1]}.operate_log
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: db-inline
+        sharding-algorithms:
+          db-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+              # 是否支持范围查询 无视分片策略进行全路由
+              allow-range-query-with-inline-sharding: true
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+        broadcast-tables:
+          - dict
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljt.study.dao.OperateLogDao">
+
+    <sql id="table">operate_log</sql>
+
+    <insert id="insertList">
+        INSERT INTO <include refid="table"/>
+        (
+            user_id, operate, content
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," >
+        (
+            #{item.userId}, #{item.operate}, #{item.content}
+        )
+        </foreach>
+    </insert>
+
+</mapper>
