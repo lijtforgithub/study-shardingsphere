@@ -22,6 +22,7 @@ class OperateLogDaoTest {
     @Autowired
     private OperateLogDao operateLogDao;
 
+
     @Test
     void testInsert() {
         IntStream.rangeClosed(1, 10).mapToObj(i -> {

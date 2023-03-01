@@ -8,7 +8,6 @@ import lombok.Data;
  */
 @Data
 public class OperateLog {
-
     private Long id;
     private Long userId;
     private String operate;

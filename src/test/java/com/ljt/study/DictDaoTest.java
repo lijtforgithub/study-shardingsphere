@@ -17,6 +17,7 @@ class DictDaoTest {
     @Autowired
     private DictDao dictDao;
 
+
     @Test
     void testInsert() {
         Dict dict = new Dict();

@@ -24,28 +24,60 @@ spring:
         password: admin
     rules:
       sharding:
+        default-key-generate-strategy:
+          column: id
+          key-generator-name: snowflake
         tables:
           operate_log:
-            key-generate-strategy:
-              column: id
-              key-generator-name: snowflake
-            actual-data-nodes: ds${[0,1]}.operate_log
+            actual-data-nodes: ds$->{[0,1]}.operate_log
             database-strategy:
               standard:
                 sharding-column: user_id
-                sharding-algorithm-name: db-inline
+                sharding-algorithm-name: user-inline
+          t_order:
+            actual-data-nodes: ds0.t_order_$->{[0,1]}
+            table-strategy:
+              standard:
+                sharding-column: id
+                sharding-algorithm-name: order-inline
+          order_item:
+            actual-data-nodes: ds0.order_item_$->{[0,1]}
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: orderItem-inline
+          member:
+            actual-data-nodes: ds$->{[0,1]}.member
+            database-strategy:
+              hint:
+                sharding-algorithm-name: member-hint
         sharding-algorithms:
-          db-inline:
+          user-inline:
             type: INLINE
             props:
               algorithm-expression: ds$->{user_id % 2}
               # 是否支持范围查询 无视分片策略进行全路由
               allow-range-query-with-inline-sharding: true
+          order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{id % 2}
+          orderItem-inline:
+            type: INLINE
+            props:
+              algorithm-expression: order_item_$->{order_id % 2}
+          member-hint:
+            type: CLASS_BASED
+            props:
+              strategy: hint
+              algorithmClassName: com.ljt.study.sharding.algorithm.MyHintShardingAlgorithm
         key-generators:
           snowflake:
             type: SNOWFLAKE
         broadcast-tables:
           - dict
+        binding-tables:
+          - t_order,order_item
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
