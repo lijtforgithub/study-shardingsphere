@@ -8,6 +8,7 @@ spring:
         type: JDBC
     props:
       sql-show: true
+      check-table-metadata-enabled: true
     datasource:
       names: ds0,ds1
       ds0:
@@ -24,6 +25,7 @@ spring:
         password: admin
     rules:
       sharding:
+        # 全局默认策略
         default-key-generate-strategy:
           column: id
           key-generator-name: snowflake
@@ -51,6 +53,9 @@ spring:
             database-strategy:
               hint:
                 sharding-algorithm-name: member-hint
+          # 单表 不指定默认ds0
+          single_table:
+            actual-data-nodes: ds1.single_table
         sharding-algorithms:
           user-inline:
             type: INLINE
@@ -70,6 +75,7 @@ spring:
             type: CLASS_BASED
             props:
               strategy: hint
+              # 不能使用algorithm-class-name
               algorithmClassName: com.ljt.study.sharding.algorithm.MyHintShardingAlgorithm
         key-generators:
           snowflake:
