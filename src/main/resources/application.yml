@@ -3,9 +3,18 @@ spring:
     allow-circular-references: true
   shardingsphere:
     mode:
-      type: Standalone
+#      type: Standalone
+#      repository:
+#        type: JDBC
+      type: Cluster
       repository:
-        type: JDBC
+        type: ZooKeeper
+        props:
+          namespace: shardingsphere
+          server-lists: 192.168.100.100:2181
+#          server-lists: 127.0.0.1:2181
+          retryIntervalMilliseconds: 5000
+          timeToLiveSeconds: 60
     props:
       sql-show: true
       check-table-metadata-enabled: true
@@ -80,6 +89,8 @@ spring:
         key-generators:
           snowflake:
             type: SNOWFLAKE
+            props:
+              worker-id:
         broadcast-tables:
           - dict
         binding-tables:
