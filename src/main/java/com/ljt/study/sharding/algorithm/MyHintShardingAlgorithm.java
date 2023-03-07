@@ -13,6 +13,10 @@ import java.util.*;
 @Slf4j
 public class MyHintShardingAlgorithm implements HintShardingAlgorithm<Long> {
 
+    public MyHintShardingAlgorithm() {
+        System.out.println();
+    }
+
     @Override
     public Collection<String> doSharding(Collection availableTargetNames, HintShardingValue shardingValue) {
         List<Integer> values = new ArrayList<>(shardingValue.getValues());

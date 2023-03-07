@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
+import com.ljt.study.sharding.algorithm.ShardingAlgorithmRefreshProcessor;
+import com.ljt.study.sharding.algorithm.ShardingRuleConfigRefreshProcessor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
@@ -25,6 +27,15 @@ import java.util.concurrent.ThreadLocalRandom;
 @Configuration
 class MainConfig {
 
+    @Bean
+    ShardingRuleConfigRefreshProcessor shardingRuleConfigRefreshProcessor() {
+        return new ShardingRuleConfigRefreshProcessor();
+    }
+
+    @Bean
+    ShardingAlgorithmRefreshProcessor shardingAlgorithmRefreshProcessor() {
+        return new ShardingAlgorithmRefreshProcessor();
+    }
     @Bean
     ApplicationRunner validateDataSource(DataSource dataSource) {
         return args -> {

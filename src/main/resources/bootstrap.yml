@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: study-shardingsphere
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      config:
+        file-extension: yml
